@@ -8,5 +8,13 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'), // Output directory
     filename: 'bundle.js', // Output filename
   },
+  module: {
+    rules: [
+      {
+        test: /\.node$/,
+        use: 'node-loader', // Use node-loader to handle .node files
+      },
+    ],
+  },
   // Add other necessary loaders or plugins here, if any
 };

@@ -32,6 +32,7 @@
     "socks": "^2.8.3"
   },
   "devDependencies": {
+    "node-loader": "^2.0.0",
     "nodemon": "^3.1.0",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"
