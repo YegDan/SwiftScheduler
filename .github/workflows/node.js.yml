@@ -34,6 +34,7 @@ jobs:
         else
           echo "::set-output name=result::not found"
           echo "Backend folder not found."
+        fi
     
     - name: Debug Backend Folder Contents
       if: steps.check_backend.outputs.result == 'found'
