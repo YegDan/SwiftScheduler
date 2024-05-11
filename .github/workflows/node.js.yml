@@ -27,13 +27,24 @@ jobs:
     - name: Check if backend folder exists
       run: test -d backend && echo "Backend folder found" || echo "Backend folder not found"
       id: check_backend
+    - name: Debug Backend Folder Contents
+      run: ls -l backend
+      if: steps.check_backend.outputs.result == 'Backend folder found'
     - name: Change directory to backend
       run: cd backend
+      if: steps.check_backend.outputs.result == 'Backend folder found'
+    - name: Debug Current Directory
+      run: pwd
       if: steps.check_backend.outputs.result == 'Backend folder found'
     - run: npm ci
       if: steps.check_backend.outputs.result == 'Backend folder found'
     - run: npm run build --if-present
       if: steps.check_backend.outputs.result == 'Backend folder found'
+    - name: Debug Before Running Tests
+      run: echo "About to run tests"
+      if: steps.check_backend.outputs.result == 'Backend folder found'
     - run: npm test
       if: steps.check_backend.outputs.result == 'Backend folder found'
-
+    - name: Debug After Running Tests
+      run: echo "Tests have been run"
+      if: steps.check_backend.outputs.result == 'Backend folder found'
