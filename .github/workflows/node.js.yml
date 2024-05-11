@@ -10,16 +10,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 18.x]
-
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 18.x
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '18.x'
         cache: 'npm'
 
     - name: Debug Root Directory Contents
@@ -29,40 +25,41 @@ jobs:
       id: check_backend
       run: |
         if test -d backend; then
-          echo "::set-output name=result::found"
+          echo "BACKEND_EXISTS=true" >> $GITHUB_ENV
           echo "Backend folder found."
         else
-          echo "::set-output name=result::not found"
+          echo "BACKEND_EXISTS=false" >> $GITHUB_ENV
           echo "Backend folder not found."
         fi
 
     - name: Debug Backend Folder Contents
-      if: steps.check_backend.outputs.result == 'found'
+      if: env.BACKEND_EXISTS == 'true'
       working-directory: backend
       run: ls -l
 
     - name: Install dependencies
-      if: steps.check_backend.outputs.result == 'found'
+      if: env.BACKEND_EXISTS == 'true'
       working-directory: backend
       run: npm ci
 
     - name: Build project
-      if: steps.check_backend.outputs.result == 'found'
+      if: env.BACKEND_EXISTS == 'true'
       working-directory: backend
       run: npm run build --if-present
 
     - name: Debug Before Running Tests
-      if: steps.check_backend.outputs.result == 'found'
+      if: env.BACKEND_EXISTS == 'true'
       working-directory: backend
       run: echo "About to run tests"
 
     - name: Run tests
-      if: steps.check_backend.outputs.result == 'found'
+      if: env.BACKEND_EXISTS == 'true'
       working-directory: backend
       run: npm test
 
     - name: Debug After Running Tests
-      if: steps.check_backend.outputs.result == 'found'
+      if: env.BACKEND_EXISTS == 'true'
       working-directory: backend
       run: echo "Tests have been run"
+
 
