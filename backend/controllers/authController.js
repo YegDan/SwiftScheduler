@@ -1,4 +1,5 @@
 // backend/controllers/authController.js
+//atemp to merge backend into main
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Teacher = require('../models/Teacher');
