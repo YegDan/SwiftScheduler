@@ -22,6 +22,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - name: Debug Root Directory Contents
+      run: ls -l
     - name: Check if backend folder exists
       run: test -d backend && echo "Backend folder found" || echo "Backend folder not found"
       id: check_backend
