@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -22,29 +21,44 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+
     - name: Debug Root Directory Contents
       run: ls -l
+
     - name: Check if backend folder exists
-      run: test -d backend && echo "Backend folder found" || echo "Backend folder not found"
       id: check_backend
+      run: |
+        if test -d backend; then
+          echo "::set-output name=result::found"
+          echo "Backend folder found."
+        else
+          echo "::set-output name=result::not found"
+          echo "Backend folder not found."
+    
     - name: Debug Backend Folder Contents
+      if: steps.check_backend.outputs.result == 'found'
       run: ls -l backend
-      if: steps.check_backend.outputs.result == 'Backend folder found'
+    
     - name: Change directory to backend
-      run: cd backend
-      if: steps.check_backend.outputs.result == 'Backend folder found'
-    - name: Debug Current Directory
-      run: pwd
-      if: steps.check_backend.outputs.result == 'Backend folder found'
-    - run: npm ci
-      if: steps.check_backend.outputs.result == 'Backend folder found'
-    - run: npm run build --if-present
-      if: steps.check_backend.outputs.result == 'Backend folder found'
+      if: steps.check_backend.outputs.result == 'found'
+      run: cd backend && pwd
+
+    - name: Install dependencies
+      if: steps.check_backend.outputs.result == 'found'
+      run: npm ci
+
+    - name: Build project
+      if: steps.check_backend.outputs.result == 'found'
+      run: npm run build --if-present
+
     - name: Debug Before Running Tests
+      if: steps.check_backend.outputs.result == 'found'
       run: echo "About to run tests"
-      if: steps.check_backend.outputs.result == 'Backend folder found'
-    - run: npm test
-      if: steps.check_backend.outputs.result == 'Backend folder found'
+
+    - name: Run tests
+      if: steps.check_backend.outputs.result == 'found'
+      run: npm test
+
     - name: Debug After Running Tests
+      if: steps.check_backend.outputs.result == 'found'
       run: echo "Tests have been run"
-      if: steps.check_backend.outputs.result == 'Backend folder found'
