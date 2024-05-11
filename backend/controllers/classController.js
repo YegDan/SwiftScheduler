@@ -3,7 +3,9 @@ const Class = require('../models/Class');
 const Classroom = require('../models/Classroom');
 const Teacher = require('../models/Teacher');
 const Student = require('../models/Student');
-async function checkClassroomAvailability(classroomId, startDate) {
+
+
+exports.checkClassroomAvailability = async (classroomId, startDate) => {
   console.log(`Checking availability in DB for classroom ${classroomId} at ${startDate}`);
   
   // Convert startDate to the beginning of the day in UTC for comparison
@@ -35,8 +37,8 @@ exports.createClass = async (req, res) => {
   const{ classroom, startDate } = req.body;
   console.log(`Checking availability for classroom ${classroom} at ${startDate}`);
   try {
-
-    const isAvailable = await checkClassroomAvailability(classroom, new Date(startDate));
+    console.log("the date passed to checkClassroomAvailability: ", new Date(startDate))
+    const isAvailable = await this.checkClassroomAvailability(classroom, new Date(startDate));
     console.log(`Availability check result for ${classroom} at ${startDate}:`, isAvailable);
 
 

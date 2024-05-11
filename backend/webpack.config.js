@@ -1,20 +1,25 @@
 const path = require('path');
 
 module.exports = {
-  target: 'node',
-  mode: 'production', // or 'development' based on your needs
-  entry: './server.js', // Entry point of your server-side code
+  mode: 'production', // Set the mode to 'production' or 'development
+  entry: './server.js', // Path to your main entry file
   output: {
-    path: path.resolve(__dirname, 'dist'), // Output directory
     filename: 'bundle.js', // Output filename
+
+    path: path.resolve(__dirname, 'dist'), // Output directory
   },
   module: {
     rules: [
+      // Define loaders for handling different file types
       {
-        test: /\.node$/,
-        use: 'node-loader', // Use node-loader to handle .node files
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader', // Example: Babel loader for transpiling JavaScript
+        },
       },
+      // Add more rules for handling other file types like CSS, images, etc.
     ],
   },
-  // Add other necessary loaders or plugins here, if any
+    target: 'node', // Specify the target environment
 };
