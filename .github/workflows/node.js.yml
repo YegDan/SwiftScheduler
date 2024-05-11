@@ -35,31 +35,34 @@ jobs:
           echo "::set-output name=result::not found"
           echo "Backend folder not found."
         fi
-    
+
     - name: Debug Backend Folder Contents
       if: steps.check_backend.outputs.result == 'found'
-      run: ls -l backend
-    
-    - name: Change directory to backend
-      if: steps.check_backend.outputs.result == 'found'
-      run: cd backend && pwd
+      working-directory: backend
+      run: ls -l
 
     - name: Install dependencies
       if: steps.check_backend.outputs.result == 'found'
+      working-directory: backend
       run: npm ci
 
     - name: Build project
       if: steps.check_backend.outputs.result == 'found'
+      working-directory: backend
       run: npm run build --if-present
 
     - name: Debug Before Running Tests
       if: steps.check_backend.outputs.result == 'found'
+      working-directory: backend
       run: echo "About to run tests"
 
     - name: Run tests
       if: steps.check_backend.outputs.result == 'found'
+      working-directory: backend
       run: npm test
 
     - name: Debug After Running Tests
       if: steps.check_backend.outputs.result == 'found'
+      working-directory: backend
       run: echo "Tests have been run"
+
